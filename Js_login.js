@@ -1,19 +1,44 @@
-function checkPassword() {
-  const password = document.getElementById('password').value;
-  if (password === '0') {
-    document.querySelector('.login').style.display = 'none';
-    document.querySelector('.blog-content').style.display = 'block';
-    var script = document.createElement("script");
-    script.setAttribute("id", "cid0020000340534915458");
-    script.setAttribute("data-cfasync", "false");
-    script.setAttribute("async", "");
-    script.setAttribute("src", "//st.chatango.com/js/gz/emb.js");
-    script.setAttribute("style", "width: 800px;height: 1000px;");
-    script.textContent = '{"handle":"chatdatwy","arch":"js","styles":{"a":"33ff33","b":100,"c":"000000","d":"000000","k":"33ff33","l":"33ff33","m":"33ff33","p":"10","q":"33ff33","r":100,"pos":"br","cv":1,"cvfntw":"bold","cvbg":"33ff33","cvfg":"000000","cvw":90,"cvh":40}}';
-    document.getElementById("welcome-message").innerText = "Tôi rất vui khi đón chào bạn đến với blog của tôi! Đây là nơi tôi chia sẻ những suy nghĩ, trải nghiệm và kiến thức của mình về nhiều chủ đề khác nhau. Tôi hy vọng bài viết của tôi sẽ giúp ích cho bạn trong bài thi hôm nay.";
-    alert('Pass Chuẩn rồi! mời sử dụng');
-    document.head.appendChild(script);
-  } else {
-    alert('pass sai rồi bạn ơi');
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+import { getDatabase, ref, onValue, push } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyDy0rWuiomfGmkvbYusXQQ0Exc8k1_myjs",
+    authDomain: "chat-on1.firebaseapp.com",
+    projectId: "chat-on1",
+    storageBucket: "chat-on1.appspot.com",
+    messagingSenderId: "30955784641",
+    appId: "1:30955784641:web:230c07f50e14ef2b8a8740",
+    measurementId: "G-EL7SYFK34S"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase();
+
+// Get elements
+const messageList = document.querySelector('.message-list');
+const chatForm = document.querySelector('.chat-form');
+const chatInput = chatForm.querySelector('input[type="text"]');
+
+// Listen for new messages
+onValue(ref(database, 'messages'), (snapshot) => {
+  messageList.innerHTML = '';
+  snapshot.forEach((childSnapshot) => {
+    const message = childSnapshot.val();
+    const li = document.createElement('li');
+    li.textContent = message.text;
+    messageList.appendChild(li);
+  });
+});
+
+// Send message
+chatForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const messageText = chatInput.value.trim();
+  if (messageText) {
+    push(ref(database, 'messages'), {
+      text: messageText
+    });
+    chatInput.value = '';
   }
-}
+});
