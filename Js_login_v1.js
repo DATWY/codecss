@@ -1,5 +1,5 @@
 // Kiểm tra nếu đang ở trang khác "/p/login.html" hoặc "/login"
-if(window.location.pathname !== "/p/login.html" && window.location.pathname !== "/login" && window.location.pathname !== "login-trang-ang-nhap-ten-ang-nhap-mat" && window.location.pathname !== "p/login-trang-ang-nhap-ten-ang-nhap-mat.html" ) {
+if(window.location.pathname !== "/p/login.html" && window.location.pathname !== "/login" ) {
   // Tạo thẻ script
   var script = document.createElement('script');
   // Thiết lập src cho script
