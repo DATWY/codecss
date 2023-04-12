@@ -1,5 +1,20 @@
       var firebaseConfig = {
         // Thông tin cấu hình Firebase
+              apiKey: "AIzaSyBYuymhxNmf22V2C93HAmCuNK6_wFspT3U",
+
+  authDomain: "chat-wywy.firebaseapp.com",
+
+  databaseURL: "https://chat-wywy-default-rtdb.firebaseio.com",
+
+  projectId: "chat-wywy",
+
+  storageBucket: "chat-wywy.appspot.com",
+
+  messagingSenderId: "452796127167",
+
+  appId: "1:452796127167:web:600c0332fa5d03a914f30a",
+
+  measurementId: "G-FK4FBJ4EY6"
       };
       firebase.initializeApp(firebaseConfig);
 
