@@ -32,7 +32,7 @@ function checkLoginStatus() {
   } else {
     // Người dùng chưa đăng nhập
     // Kiểm tra nếu đang ở trang đăng nhập thì không chuyển hướng
-    if (window.location.pathname === "/p/login.html") {
+    if (window.location.pathname === "https://chatwywy.blogspot.com/login") {
       return true;
     } else {
       // Người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập
@@ -43,7 +43,7 @@ function checkLoginStatus() {
 }
 
 // Kiểm tra nếu đang ở trang đăng nhập thì không gọi hàm checkLoginStatus()
-if (window.location.pathname !== "/p/login.html") {
+if (window.location.pathname !== "https://chatwywy.blogspot.com/login") {
   checkLoginStatus();
 }
 
