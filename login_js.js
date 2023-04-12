@@ -1,4 +1,6 @@
-      var firebaseConfig = {
+import firebase from "firebase/app";
+import "firebase/database";
+var firebaseConfig = {
         // Thông tin cấu hình Firebase
               apiKey: "AIzaSyBYuymhxNmf22V2C93HAmCuNK6_wFspT3U",
 
