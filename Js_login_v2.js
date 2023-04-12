@@ -31,17 +31,19 @@ function checkLoginStatus() {
     return true;
   } else {
     // Người dùng chưa đăng nhập
-    return false;
+    // Kiểm tra nếu đang ở trang đăng nhập thì không chuyển hướng
+    if (window.location.pathname === "/p/login.html") {
+      return true;
+    } else {
+      // Người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập
+      window.location.href = "/p/login.html";
+      return false;
+    }
   }
 }
 
 // Kiểm tra trạng thái đăng nhập khi tải trang
-if (checkLoginStatus()) {
-  // Người dùng đã đăng nhập, giữ nguyên trang web
-} else {
-  // Người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập
-  window.location.href = "/p/login.html";
-}
+checkLoginStatus();
 
 // Khi đăng nhập thành công
 if (userData.username === username && userData.password === password) {
