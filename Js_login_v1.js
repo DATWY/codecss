@@ -1,6 +1,6 @@
 
+
 if (localStorage.getItem('isLoggedIn') !== 'true') {
-  if (window.location.pathname !== '/login') {
-    window.location.href = "/login";
-  }
-}
+      // Đăng nhập tự động nếu thông tin đăng nhập còn hiệu lực
+      window.location.href = "/login"; // Chuyển hướng đến trang home
+    }
