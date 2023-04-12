@@ -42,8 +42,10 @@ function checkLoginStatus() {
   }
 }
 
-// Kiểm tra trạng thái đăng nhập khi tải trang
-checkLoginStatus();
+// Kiểm tra nếu đang ở trang đăng nhập thì không gọi hàm checkLoginStatus()
+if (window.location.pathname !== "/p/login.html") {
+  checkLoginStatus();
+}
 
 // Khi đăng nhập thành công
 if (userData.username === username && userData.password === password) {
