@@ -1,6 +1,10 @@
 
+
 // Hàm kiểm tra trạng thái đăng nhập
 function checkLoginStatus() {
+  if (document.URL.includes('login')) {
+    return true;
+  }
   if (localStorage.getItem('isLoggedIn') === 'true') {
     var expirationDate = new Date(localStorage.getItem('expirationDate'));
     if (expirationDate < new Date()) {
@@ -12,10 +16,10 @@ function checkLoginStatus() {
       return true;
     }
   }
-  return false;
+  return false; 
 }
 
 // Kiểm tra trạng thái đăng nhập và chuyển hướng nếu cần
 if (!checkLoginStatus()) {
-  window.location.href = "/login";
+  window.location.href = "/login"; 
 }
