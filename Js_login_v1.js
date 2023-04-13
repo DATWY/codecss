@@ -21,5 +21,5 @@ function checkLoginStatus() {
 
 // Kiểm tra trạng thái đăng nhập và chuyển hướng nếu cần
 if (!checkLoginStatus()) {
-  window.location.href = "/login"; 
+  window.location.href = "/p/login.html"; 
 }
