@@ -2,7 +2,7 @@
 
 // Hàm kiểm tra trạng thái đăng nhập
 function checkLoginStatus() {
-  if (document.URL.includes('login')) {
+  if (document.URL.includes('plogin')) {
     return true;
   }
   if (localStorage.getItem('isLoggedIn') === 'true') {
