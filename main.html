@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Tải lên và tải xuống tệp tin từ Firebase Storage</title>
+</head>
+<body>
+  <div class="my-wrapper">
+    <h1>Tải lên và tải xuống tệp tin từ Firebase Storage</h1>
+
+    <form id="uploadForm">
+      <input type="file" id="fileInput">
+      <button type="submit">Tải lên</button>
+      <p id="uploadProgress"></p>
+    </form>
+
+    <ul id="fileList"></ul>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-database.js"></script>
+  <script>
+    // Khởi tạo Firebase
+    var firebaseConfig = {
+      // Thay đổi thông tin cấu hình Firebase của bạn ở đây
+        apiKey: "AIzaSyBYuymhxNmf22V2C93HAmCuNK6_wFspT3U",
+  authDomain: "chat-wywy.firebaseapp.com",
+  databaseURL: "https://chat-wywy-default-rtdb.firebaseio.com",
+  projectId: "chat-wywy",
+  storageBucket: "chat-wywy.appspot.com",
+  messagingSenderId: "452796127167",
+  appId: "1:452796127167:web:600c0332fa5d03a914f30a",
+  measurementId: "G-FK4FBJ4EY6"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Lấy tham chiếu đến Firebase Storage và Firebase Realtime Database
+    var storageRef = firebase.storage().ref();
+    var databaseRef = firebase.database().ref().child('files');
+
+    // Xử lý sự kiện submit form
+    var uploadForm = document.getElementById('uploadForm');
+    uploadForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      var fileInput = document.getElementById('fileInput');
+      var file = fileInput.files[0];
+      var fileName = file.name;
+      var fileRef = storageRef.child(fileName);
+      var uploadTask = fileRef.put(file);
+
+      // Xóa lựa chọn tệp tin và hiển thị tiến độ tải lên
+      uploadTask.on('state_changed', function(snapshot) {
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Tiến trình tải lên: ' + progress + '% đã hoàn thành');
+        fileInput.value = ''; // Xóa lựa chọn tệp tin
+        document.getElementById('uploadProgress').textContent = 'Đang tải lên... ' + progress.toFixed(2) + '%'; // Hiển thị tiến độ tải lên
+      }, function(error) {
+        console.error('Tải lên tệp không thành công:', error);
+        document.getElementById('uploadProgress').textContent = 'Tải lên không thành công';
+      }, function() {
+        // Lấy URL của tệp đã tải lên và lưu vào Firebase Realtime Database
+        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          var fileData = {
+            name: fileName,
+            size: file.size,
+            url: downloadURL,
+            timestamp: Math.floor(Date.now() / 1000)
+          };
+          databaseRef.push(fileData);
+          console.log('Tải lên tệp thành công:', downloadURL);
+          document.getElementById('uploadProgress').textContent = 'Tải lên thành công';
+        });
+      });
+    });
+
+    // Lấy danh sách tệp tin và hiển thị trên trang web
+    databaseRef.on('value', function(snapshot) {
+      var fileList = document.getElementById('fileList');
+      fileList.innerHTML = '';
+
+      snapshot.forEach(function(childSnapshot) {
+        var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
+
+        var listItem = document.createElement('li');
+        var link = document.createElement('a');
+        link.href = childData.url;
+        link.textContent = childData.name;
+        link.target = '_blank';
+
+        var size = document.createElement('span');
+        size.textContent = (childData.size / 1024).toFixed(2) + ' KB';
+
+        var timestamp = document.createElement('span');
+        timestamp.textContent = new Date(childData.timestamp * 1000).toLocaleString();
+
+        var deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Xóa';
+        deleteButton.addEventListener('click', function() {
+          var fileRef = storageRef.child(childData.name);
+          fileRef.delete().then(function() {
+            databaseRef.child(childKey).remove();
+            console.log('Đã xóa tệp:', childData.name);
+          }).catch(function(error) {
+            console.error('Xóa tệp không thành công:', error);
+          });
+        });
+
+        listItem.appendChild(link);
+        listItem.appendChild(size);
+        listItem.appendChild(timestamp);
+        listItem.appendChild(deleteButton);
+        fileList.appendChild(listItem);
+      });
+    });
+  </script>
+</body>
+</html>
