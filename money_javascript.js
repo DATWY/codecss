@@ -28,27 +28,32 @@ database.ref('money').once('value', function(snapshot) {
 
 // Tính toán số tiền cho mỗi lọ khi người dùng nhập tổng số tiền
 function calculate() {
-  var total = parseInt(document.getElementById('total').value);
-  var nec = Math.round(total * 0.5);
-  var lts = Math.round(total * 0.1);
-  var edu = Math.round(total * 0.1);
-  var play = Math.round(total * 0.1);
-  var ffa = Math.round(total * 0.1);
-  var give = Math.round(total * 0.1);
-  database.ref('money').set({
-    nec: nec,
-    lts: lts,
-    edu: edu,
-    play: play,
-    ffa: ffa,
-    give: give
+  var newTotal = parseInt(document.getElementById('total').value);
+  database.ref('total').once('value', function(snapshot) {
+    var currentTotal = snapshot.val();
+    var updatedTotal = currentTotal + newTotal;
+    database.ref('total').set(updatedTotal);
+    var nec = Math.round(updatedTotal * 0.5);
+    var lts = Math.round(updatedTotal * 0.1);
+    var edu = Math.round(updatedTotal * 0.1);
+    var play = Math.round(updatedTotal * 0.1);
+    var ffa = Math.round(updatedTotal * 0.1);
+    var give = Math.round(updatedTotal * 0.1);
+    database.ref('money').set({
+      nec: nec,
+      lts: lts,
+      edu: edu,
+      play: play,
+      ffa: ffa,
+      give: give
+    });
+    document.getElementById('nec').innerHTML = formatNumber(nec);
+    document.getElementById('lts').innerHTML = formatNumber(lts);
+    document.getElementById('edu').innerHTML = formatNumber(edu);
+    document.getElementById('play').innerHTML = formatNumber(play);
+    document.getElementById('ffa').innerHTML = formatNumber(ffa);
+    document.getElementById('give').innerHTML = formatNumber(give);
   });
-  document.getElementById('nec').innerHTML = formatNumber(nec);
-  document.getElementById('lts').innerHTML = formatNumber(lts);
-  document.getElementById('edu').innerHTML = formatNumber(edu);
-  document.getElementById('play').innerHTML = formatNumber(play);
-  document.getElementById('ffa').innerHTML = formatNumber(ffa);
-  document.getElementById('give').innerHTML = formatNumber(give);
   return false;
 }
 
